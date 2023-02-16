@@ -1,26 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import SpotName from "./SpotName";
+import { Outlet } from "react-router-dom";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    //const currentDate = new Date();
+    //const start = currentDate.toISOString().split("T")[0];
+    //const endDate = new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+    //const end = endDate.toISOString().split("T")[0];
+
+    return (
+        <div className="flex flex-row gap-1 justify-between w-px-600 h-px-400 bg-indigo-900">
+            <SpotName />
+            <Outlet />
+        </div>
+    );
 }
 
 export default App;
