@@ -15,6 +15,8 @@ import { surfSpots } from "./data/spots";
 import {
     convertToTidesArray,
     surfQualityPrediction,
+    addMinMaxSwellHeight,
+    convertToTides,
 } from "./helpers/transformData";
 
 export async function spotDetailsLoader(params: { [key: string]: any }) {
@@ -37,18 +39,27 @@ function SurfCard() {
     }, [spot]);
 
     // spot constants
+    const surfApi = process.env.REACT_APP_SURF_API;
     const lat = spot.lat;
     const lon = spot.log;
     // url to get surf forecast
     //const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${log}&hourly=wave_height,wave_direction,wave_period&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=Europe%2FBerlin`;
     // Surf forecast call
-    const url = `https://api.worldweatheronline.com/premium/v1/marine.ashx?key=f8969ba5c36a4c7ba64164732230802&q=${lat},${lon}&format=json&tide=yes&tp=1`;
+    const url = `https://api.worldweatheronline.com/premium/v1/marine.ashx?key=${surfApi}&q=${lat},${lon}&format=json&tide=yes&tp=1`;
 
     const getSurfDataApiCall = async () => {
         const res = await axios.get(url);
         const surfData = res.data.data.weather;
+        const dailySurf = res.data.data.weather;
+        console.log(surfData);
         setHourlySurfData(surfQualityPrediction(surfData[0].hourly));
         setTide(convertToTidesArray(surfData));
+        setDailySurfData(addMinMaxSwellHeight(dailySurf));
+    };
+
+    const handleClick = (data: any) => {
+        setHourlySurfData(surfQualityPrediction(data.hourly));
+        setTide(convertToTides(data));
     };
 
     //const getSurfDataApiCall = async () => {
@@ -128,7 +139,6 @@ function SurfCard() {
             } else {
                 return (
                     <div>
-                        <div>Waater Temperature</div>
                         <div>No data available</div>
                     </div>
                 );
@@ -138,7 +148,7 @@ function SurfCard() {
         }
     };
 
-    const CustomTooltip = (data: any) => {
+    const HourlyTooltip = (data: any) => {
         if (data.active === true) {
             return (
                 <div className="flex flex-col bg-indigo-900 opacity-90 rounded-md w-20 h-28 p-2">
@@ -164,6 +174,10 @@ function SurfCard() {
             );
         } else return null;
     };
+
+    console.log(tide);
+    console.log(dailySurfData);
+    console.log(hourlySurfData);
 
     return (
         <div className="flex flex-row gap-1 flex-auto">
@@ -215,7 +229,7 @@ function SurfCard() {
                             ))}
                         </Bar>
                         <Tooltip
-                            content={<CustomTooltip data={hourlySurfData} />}
+                            content={<HourlyTooltip data={hourlySurfData} />}
                         />
                     </BarChart>
                     <AreaChart
@@ -244,6 +258,7 @@ function SurfCard() {
                             axisLine={false}
                             tickLine={false}
                             tick={false}
+                            type="number"
                         />
                         <Area
                             type="monotone"
@@ -266,7 +281,7 @@ function SurfCard() {
                         }}
                     >
                         <XAxis
-                            dataKey={"time"}
+                            dataKey={"day"}
                             axisLine={false}
                             tickLine={false}
                             tick={{
@@ -283,13 +298,24 @@ function SurfCard() {
                             padding={{ top: 10 }}
                         />
                         <Bar
-                            dataKey="wave_height_max"
+                            dataKey="maxSwellHeight"
                             label={{
                                 position: "top",
                                 fontSize: 8,
                                 fill: "#eef2ff",
                             }}
-                            fill="#84cc16"
+                            fill="#4338ca"
+                            barSize={10}
+                            onClick={handleClick}
+                        />
+                        <Bar
+                            dataKey="minSwellHeight"
+                            label={{
+                                position: "top",
+                                fontSize: 8,
+                                fill: "#eef2ff",
+                            }}
+                            fill="#4338ca"
                             barSize={10}
                         />
                     </BarChart>

@@ -29,6 +29,44 @@ export function convertToTidesArray(array: any[]) {
     return tidesArray;
 }
 
+export function convertToTides(obj: any) {
+    let tidesArray: {
+        date: any;
+        tideTime: any;
+        tide_type: any;
+        tideHeight: any;
+    }[] = [];
+
+    obj.tides.forEach((tideData: { tide_data: any }) => {
+        tideData.tide_data.forEach(
+            (tide: { tide_type: any; tideTime: any; tideHeight_mt: any }) => {
+                tidesArray.push({
+                    date: obj.date,
+                    tideTime: tide.tideTime,
+                    tide_type: tide.tide_type,
+                    tideHeight: tide.tideHeight_mt,
+                });
+            }
+        );
+    });
+
+    return tidesArray;
+}
+
+export function addMinMaxSwellHeight(arr: any[]) {
+    return arr.map((obj) => {
+        const date = new Date(obj.date);
+        const day = date.toLocaleDateString("en-US", { weekday: "short" });
+        const hourlyArr = obj.hourly;
+        const swellHeights = hourlyArr.map((hour: { swellHeight_m: any }) =>
+            Number(hour.swellHeight_m)
+        );
+        const maxSwellHeight = Math.max(...swellHeights);
+        const minSwellHeight = Math.min(...swellHeights);
+        return { ...obj, day, maxSwellHeight, minSwellHeight };
+    });
+}
+
 // Surf Conditions Prediction
 export function surfQualityPrediction(array: any[]) {
     let newArray: any[] = [];

@@ -34,4 +34,10 @@ export const surfSpots: {
         lat: 43.446,
         log: -1.593,
     },
+    {
+        id: "6",
+        name: "Illbaritz",
+        lat: 43.459,
+        log: -1.579,
+    },
 ];
