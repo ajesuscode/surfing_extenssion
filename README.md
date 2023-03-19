@@ -1,46 +1,27 @@
-# Getting Started with Create React App
+# French Basque Country Surfspots Chrome Extension
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a Chrome extension that provides surf spots surfing conditions in the French Basque Country. The extension displays a list of hardcoded surf spots. You can hardcode your own spots or contribute to create an open and free surfspots database.
 
-## Available Scripts
+## Installation
 
-In the project directory, you can run:
+To install the extension, follow these steps:
 
-### `npm start`
+1. Download the code from GitHub and run build command.
+2. Open Google Chrome and navigate to chrome://extensions.
+3. Turn on Developer Mode by clicking the toggle switch in the top right corner of the screen.
+4. Click on "Load unpacked" and select the build folder.
+5. The extension should now be installed and ready to use.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Before you can use this extension, you need to go to [World Weather Online](https://www.worldweatheronline.com/) and create an API key. Once you have your API key, create a `.env` file in the root directory of the project and paste your key there.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Example: API_KEY=your_api_key_here
 
-### `npm test`
+## Usage
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Once the extension is installed and you have your API key set up, click on the icon in the toolbar to open the list of surf spots. Click on a spot to see the surfing conditions.
 
-### `npm run build`
+## Contributing
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Extenssion is personal educational project and still in development.
+If you would like to contribute to the development of the extension or leave a feedback, feel free to submit a pull request on GitHub. Any contributions are greatly appreciated!
+Surfs Up!
