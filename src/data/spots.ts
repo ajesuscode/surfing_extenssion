@@ -40,4 +40,28 @@ export const surfSpots: {
         lat: 43.459,
         log: -1.579,
     },
+    {
+        id: "7",
+        name: "Parlamentia",
+        lat: 43.422,
+        log: -1.633,
+    },
+    {
+        id: "8",
+        name: "Grand Plage",
+        lat: 43.478,
+        log: -1.558,
+    },
+    {
+        id: "9",
+        name: "Le VVF",
+        lat: 43.487,
+        log: -1.547,
+    },
+    {
+        id: "10",
+        name: "La Barre",
+        lat: 43.519,
+        log: -1.522,
+    },
 ];

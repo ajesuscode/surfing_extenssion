@@ -42,7 +42,7 @@ function SurfCard() {
     const surfApi = process.env.REACT_APP_SURF_API;
     const lat = spot.lat;
     const lon = spot.log;
-    // url to get surf forecast
+    // free url to get surf forecast
     //const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${log}&hourly=wave_height,wave_direction,wave_period&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=Europe%2FBerlin`;
     // Surf forecast call
     const url = `https://api.worldweatheronline.com/premium/v1/marine.ashx?key=${surfApi}&q=${lat},${lon}&format=json&tide=yes&tp=1`;
@@ -180,154 +180,171 @@ function SurfCard() {
     console.log(hourlySurfData);
 
     return (
-        <div className="flex flex-row gap-1 flex-auto">
-            {hourlySurfData && dailySurfData && tide && (
-                <div className="bg-indigo-800 rounded-lg my-1">
-                    <BarChart
-                        barGap={10}
-                        maxBarSize={10}
-                        width={350}
-                        height={130}
-                        data={hourlySurfData.slice(0, 25)}
-                        margin={{
-                            top: 10,
-                            right: 30,
-                            left: 0,
-                            bottom: 0,
-                        }}
-                    >
-                        <XAxis
-                            dataKey={"time"}
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{
-                                strokeWidth: 1,
-                                fontSize: 6,
-                                fill: "#eef2ff",
+        <>
+            <div className="flex flex-row gap-1 flex-auto">
+                {hourlySurfData && dailySurfData && tide && (
+                    <div className="bg-indigo-800 rounded-lg my-1">
+                        <div className="px-10 py-1 text-2xs text-indigo-200/50">
+                            Hourly forecast
+                        </div>
+                        <BarChart
+                            barGap={10}
+                            maxBarSize={10}
+                            width={350}
+                            height={130}
+                            data={hourlySurfData.slice(0, 25)}
+                            margin={{
+                                top: 10,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
                             }}
-                        />
-                        <YAxis
-                            axisLine={false}
-                            domain={[0, "dataMax"]}
-                            tickCount={10}
-                            tick={{
-                                strokeWidth: 1,
-                                fontSize: 8,
-                                fontWeight: "bold",
-                                fill: "#eef2ff",
+                        >
+                            <XAxis
+                                dataKey={"time"}
+                                axisLine={false}
+                                tickLine={false}
+                                tick={{
+                                    strokeWidth: 1,
+                                    fontSize: 6,
+                                    fill: "#eef2ff",
+                                }}
+                            />
+                            <YAxis
+                                axisLine={false}
+                                domain={[0, "dataMax"]}
+                                tickCount={10}
+                                tick={{
+                                    strokeWidth: 1,
+                                    fontSize: 8,
+                                    fontWeight: "bold",
+                                    fill: "#eef2ff",
+                                }}
+                                padding={{ top: 10 }}
+                            />
+                            <Bar
+                                dataKey="swellHeight_m"
+                                fill="#84cc16"
+                                barSize={8}
+                            >
+                                {hourlySurfData.map((i, index) => (
+                                    // У fill треба прописати номер кольора, який кастомно записати в масив в залежності від серф кондішинів
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={i.quality}
+                                        strokeWidth={i.tempC}
+                                    />
+                                ))}
+                            </Bar>
+                            <Tooltip
+                                content={
+                                    <HourlyTooltip data={hourlySurfData} />
+                                }
+                            />
+                        </BarChart>
+                        <div className="px-10 py-1 text-2xs text-indigo-200/50">
+                            Tide
+                        </div>
+                        <AreaChart
+                            width={350}
+                            height={60}
+                            data={tide.slice(0, 5)}
+                            margin={{
+                                top: 5,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
                             }}
-                            padding={{ top: 10 }}
-                        />
-                        <Bar dataKey="swellHeight_m" fill="#84cc16" barSize={8}>
-                            {hourlySurfData.map((i, index) => (
-                                // У fill треба прописати номер кольора, який кастомно записати в масив в залежності від серф кондішинів
-                                <Cell
-                                    key={`cell-${index}`}
-                                    fill={i.quality}
-                                    strokeWidth={i.tempC}
-                                />
-                            ))}
-                        </Bar>
-                        <Tooltip
-                            content={<HourlyTooltip data={hourlySurfData} />}
-                        />
-                    </BarChart>
-                    <AreaChart
-                        width={350}
-                        height={60}
-                        data={tide.slice(0, 5)}
-                        margin={{
-                            top: 5,
-                            right: 30,
-                            left: 0,
-                            bottom: 0,
-                        }}
-                    >
-                        <XAxis
-                            dataKey="tideTime"
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{
-                                strokeWidth: 1,
-                                fontSize: 8,
-                                fill: "#eef2ff",
+                        >
+                            <XAxis
+                                dataKey="tideTime"
+                                axisLine={false}
+                                tickLine={false}
+                                tick={{
+                                    strokeWidth: 1,
+                                    fontSize: 8,
+                                    fill: "#eef2ff",
+                                }}
+                            />
+                            <YAxis
+                                dataKey="tideHeight"
+                                axisLine={false}
+                                tickLine={false}
+                                tick={false}
+                                type="number"
+                            />
+                            <Area
+                                type="monotone"
+                                dataKey="tideHeight"
+                                stroke="#8884d8"
+                                fill="#fca5a5"
+                            />
+                        </AreaChart>
+                        <div className="px-10 py-1 text-2xs text-indigo-200/50">
+                            Daily forecast
+                        </div>
+                        <BarChart
+                            barCategoryGap={15}
+                            maxBarSize={15}
+                            width={350}
+                            height={80}
+                            data={dailySurfData}
+                            margin={{
+                                top: 5,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
                             }}
-                        />
-                        <YAxis
-                            dataKey="tideHeight"
-                            axisLine={false}
-                            tickLine={false}
-                            tick={false}
-                            type="number"
-                        />
-                        <Area
-                            type="monotone"
-                            dataKey="tideHeight"
-                            stroke="#8884d8"
-                            fill="#fca5a5"
-                        />
-                    </AreaChart>
-                    <BarChart
-                        barCategoryGap={15}
-                        maxBarSize={15}
-                        width={350}
-                        height={80}
-                        data={dailySurfData}
-                        margin={{
-                            top: 5,
-                            right: 30,
-                            left: 0,
-                            bottom: 0,
-                        }}
-                    >
-                        <XAxis
-                            dataKey={"day"}
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{
-                                strokeWidth: 1,
-                                fontSize: 8,
-                                fill: "#eef2ff",
-                            }}
-                        />
-                        <YAxis
-                            axisLine={false}
-                            domain={[0, "dataMax"]}
-                            tickCount={12}
-                            tick={false}
-                            padding={{ top: 10 }}
-                        />
-                        <Bar
-                            dataKey="maxSwellHeight"
-                            label={{
-                                position: "top",
-                                fontSize: 8,
-                                fill: "#eef2ff",
-                            }}
-                            fill="#4338ca"
-                            barSize={10}
-                            onClick={handleClick}
-                        />
-                        <Bar
-                            dataKey="minSwellHeight"
-                            label={{
-                                position: "top",
-                                fontSize: 8,
-                                fill: "#eef2ff",
-                            }}
-                            fill="#4338ca"
-                            barSize={10}
-                        />
-                    </BarChart>
+                        >
+                            <XAxis
+                                dataKey={"day"}
+                                axisLine={false}
+                                tickLine={false}
+                                tick={{
+                                    strokeWidth: 1,
+                                    fontSize: 8,
+                                    fill: "#eef2ff",
+                                }}
+                            />
+                            <YAxis
+                                axisLine={false}
+                                domain={[0, "dataMax"]}
+                                tickCount={12}
+                                tick={false}
+                                padding={{ top: 10 }}
+                            />
+                            <Bar
+                                dataKey="maxSwellHeight"
+                                label={{
+                                    position: "top",
+                                    fontSize: 8,
+                                    fill: "#eef2ff",
+                                }}
+                                fill="#4338ca"
+                                barSize={10}
+                                onClick={handleClick}
+                            />
+                            <Bar
+                                dataKey="minSwellHeight"
+                                label={{
+                                    position: "top",
+                                    fontSize: 8,
+                                    fill: "#eef2ff",
+                                }}
+                                fill="#4338ca"
+                                barSize={10}
+                            />
+                        </BarChart>
+                    </div>
+                )}
+                <div className=" bg-indigo-800 my-1 rounded-lg w-24 flex flex-col gap-1 max-h-screen">
+                    <div className="text-3xs text-indigo-300 font-medium p-1 self-center">
+                        Current Conditions
+                    </div>
+                    <CurrentConditions />
                 </div>
-            )}
-            <div className=" bg-indigo-800 my-1 rounded-lg w-24 flex flex-col gap-1 max-h-screen">
-                <div className="text-3xs text-indigo-300 font-medium p-1 self-center">
-                    Current Conditions
-                </div>
-                <CurrentConditions />
             </div>
-        </div>
+        </>
     );
 }
 

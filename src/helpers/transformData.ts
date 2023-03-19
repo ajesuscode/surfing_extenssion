@@ -86,29 +86,26 @@ export function surfQualityPrediction(array: any[]) {
             let windDir = parseFloat(obj.winddirDegree);
             // Determine the color hex string based on the values of multiple keys in the original object
             if (
-                swellHeight < 0.6 &&
-                windSpeed > 28 &&
-                swellPeriod < 7 &&
-                !(swellDir <= 355 && swellDir >= 240) &&
-                !(windDir >= 45 && windDir <= 170)
+                swellHeight < 0.4 ||
+                swellHeight > 4 ||
+                (windSpeed > 30 && !(swellDir <= 355 && swellDir >= 240))
+                // !(windDir >= 45 && windDir <= 190)
             ) {
                 colorHex = "#93c5fd"; // blue for poor surf conditions
             } else if (
-                swellHeight >= 0.7 &&
-                swellHeight < 1.2 &&
-                windSpeed >= 20 &&
-                windSpeed <= 27 &&
-                swellPeriod >= 8 &&
-                swellPeriod <= 12
+                (swellHeight >= 0.7 &&
+                    swellHeight < 1 &&
+                    windSpeed >= 20 &&
+                    windSpeed <= 27) ||
+                (swellPeriod >= 6 && swellPeriod <= 10)
             ) {
                 colorHex = "#eab308"; // dark-yellow for moderate surf conditions
             } else if (
-                swellHeight >= 1.2 &&
-                swellHeight < 2 &&
-                windSpeed >= 10 &&
-                windSpeed <= 20 &&
-                swellPeriod >= 10 &&
-                swellPeriod <= 15
+                (swellHeight >= 1 &&
+                    swellHeight < 1.8 &&
+                    windSpeed >= 10 &&
+                    windSpeed <= 20) ||
+                (swellPeriod >= 10 && swellPeriod <= 15)
             ) {
                 colorHex = "#fde047"; // yellow for moderate surf conditions
             } else {
