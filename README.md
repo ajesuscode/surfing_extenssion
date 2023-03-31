@@ -8,6 +8,8 @@ In addition to providing surf spots and conditions, this extension now also incl
 
 Please note that this feature is still in beta and responses may not always be accurate or appropriate. We welcome any feedback and suggestions for improvement. Enjoy the waves and the conversation!
 
+![Basque Surf Extension](https://github.com/ajesuscode/surfing_extenssion/blob/main/Screenshot%202023-03-31%20at%2022.17.41.png)
+
 ## Installation
 
 To install the extension, follow these steps:
