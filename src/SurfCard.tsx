@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import bender from "./img/bender.png";
+import prof from "./img/prof.png";
+import fry from "./img/fry.png";
+import zoid from "./img/zoid.png";
+import leela from "./img/leela.png";
 import { useLoaderData } from "react-router-dom";
 import {
     XAxis,
@@ -12,12 +17,14 @@ import {
     Tooltip,
 } from "recharts";
 import { surfSpots } from "./data/spots";
+// import { SurfData } from "./interface/surfData";
 import {
     convertToTidesArray,
     surfQualityPrediction,
     addMinMaxSwellHeight,
     convertToTides,
 } from "./helpers/transformData";
+import { aiForecastCall } from "./helpers/openaiCall";
 
 export async function spotDetailsLoader(params: { [key: string]: any }) {
     const surfSpot = surfSpots.find((x) => x.id === params.params.id);
@@ -33,10 +40,42 @@ function SurfCard() {
         { [key: string]: any }[]
     >([]);
     const [tide, setTide] = useState<{ [key: string]: any }[]>([]);
+    const [surfMsg, setSurfMsg] = useState<string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         getSurfDataApiCall();
     }, [spot]);
+
+    async function handleAiForecastCall(
+        hourlySurfData: { [key: string]: any }[]
+    ) {
+        try {
+            const date = new Date();
+            let hour: string = date.getHours().toString();
+            hour = hour.length === 1 ? `0${hour}` : hour;
+            if (hourlySurfData.length > 0) {
+                const conditionsData = hourlySurfData.find(
+                    (obj) => obj.time === hour
+                );
+                const aiForecast = (await aiForecastCall(
+                    conditionsData
+                )) as string;
+                setSurfMsg(aiForecast);
+                setIsLoading(false);
+            } else {
+                console.error("No hourly surf data found.");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        if (hourlySurfData !== null) {
+            handleAiForecastCall(hourlySurfData);
+        }
+    }, [hourlySurfData]);
 
     // spot constants
     const surfApi = process.env.REACT_APP_SURF_API;
@@ -48,6 +87,7 @@ function SurfCard() {
     const url = `https://api.worldweatheronline.com/premium/v1/marine.ashx?key=${surfApi}&q=${lat},${lon}&format=json&tide=yes&tp=1`;
 
     const getSurfDataApiCall = async () => {
+        setIsLoading(true);
         const res = await axios.get(url);
         const surfData = res.data.data.weather;
         const dailySurf = res.data.data.weather;
@@ -58,6 +98,7 @@ function SurfCard() {
     };
 
     const handleClick = (data: any) => {
+        setIsLoading(true);
         setHourlySurfData(surfQualityPrediction(data.hourly));
         setTide(convertToTides(data));
     };
@@ -78,9 +119,60 @@ function SurfCard() {
             const conditionsData = hourlySurfData.find(
                 (obj) => obj.time === hour
             );
-            if (conditionsData) {
+            if (conditionsData && surfMsg) {
                 return (
                     <div className="grid grid-cols-2">
+                        <div
+                            className="flex flex-wrap col-span-2 m-1 rounded-md content-center"
+                            style={{ background: conditionsData.quality }}
+                        >
+                            <div className="p-2 ">
+                                {conditionsData.quality === "#93c5fd" && (
+                                    <img
+                                        src={prof}
+                                        alt="p.F."
+                                        className="w-24 rounded-lg"
+                                    />
+                                )}
+                                {conditionsData.quality === "#eab308" && (
+                                    <img
+                                        src={bender}
+                                        alt="B"
+                                        className="w-24 rounded-lg"
+                                    />
+                                )}
+                                {conditionsData.quality === "#6366f1" && (
+                                    <img
+                                        src={zoid}
+                                        alt="Z"
+                                        className="w-24 rounded-lg"
+                                    />
+                                )}
+                                {conditionsData.quality === "#fde047" && (
+                                    <img
+                                        src={leela}
+                                        alt="L"
+                                        className="w-24 rounded-lg"
+                                    />
+                                )}
+                                {conditionsData.quality === "#bef264" && (
+                                    <img
+                                        src={fry}
+                                        alt="F"
+                                        className="w-24 rounded-lg"
+                                    />
+                                )}
+                            </div>
+                            <div
+                                className={
+                                    isLoading
+                                        ? "hidden"
+                                        : "text-2xs text-secondary font-medium mb-2 mx-2 opacity-75"
+                                }
+                            >
+                                {surfMsg}
+                            </div>
+                        </div>
                         <div className="flex flex-col m-1 bg-indigo-900/50 rounded-md items-center">
                             <div className="text-3xs text-indigo-200 font-thin">
                                 Water
@@ -138,8 +230,10 @@ function SurfCard() {
                 );
             } else {
                 return (
-                    <div>
-                        <div>No data available</div>
+                    <div className="text-2xs text-indigo-200 font-medium m-2">
+                        <div className="text-2xs text-indigo-200 font-medium m-2">
+                            Waiting for surf data
+                        </div>
                     </div>
                 );
             }

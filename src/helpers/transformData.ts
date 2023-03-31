@@ -88,10 +88,11 @@ export function surfQualityPrediction(array: any[]) {
             if (
                 swellHeight < 0.4 ||
                 swellHeight > 4 ||
-                (windSpeed > 30 && !(swellDir <= 355 && swellDir >= 240))
+                (windSpeed > 30 && !(swellDir <= 355 && swellDir >= 240)) ||
+                windSpeed > 30
                 // !(windDir >= 45 && windDir <= 190)
             ) {
-                colorHex = "#93c5fd"; // blue for poor surf conditions
+                colorHex = "#93c5fd"; // blue for bad surf conditions
             } else if (
                 (swellHeight >= 0.7 &&
                     swellHeight < 1 &&
@@ -99,7 +100,9 @@ export function surfQualityPrediction(array: any[]) {
                     windSpeed <= 27) ||
                 (swellPeriod >= 6 && swellPeriod <= 10)
             ) {
-                colorHex = "#eab308"; // dark-yellow for moderate surf conditions
+                colorHex = "#eab308"; // dark-yellow for poor surf conditions
+            } else if (swellHeight >= 3 && windSpeed >= 20 && windSpeed <= 30) {
+                colorHex = "#6366f1"; // indigo for unpredictable surf conditions
             } else if (
                 (swellHeight >= 1 &&
                     swellHeight < 1.8 &&

@@ -2,6 +2,12 @@
 
 This is a Chrome extension that provides surf spots surfing conditions in the French Basque Country. The extension displays a list of hardcoded surf spots. You can hardcode your own spots or contribute to create an open and free surfspots database.
 
+## UPDATE!!! ChatGPT API Call with Futurama Character Responses
+
+In addition to providing surf spots and conditions, this extension now also includes a ChatGPT API call feature with responses from characters of the popular TV show "Futurama".
+
+Please note that this feature is still in beta and responses may not always be accurate or appropriate. We welcome any feedback and suggestions for improvement. Enjoy the waves and the conversation!
+
 ## Installation
 
 To install the extension, follow these steps:
@@ -15,6 +21,15 @@ To install the extension, follow these steps:
 Before you can use this extension, you need to go to [World Weather Online](https://www.worldweatheronline.com/) and create an API key. Once you have your API key, create a `.env` file in the root directory of the project and paste your key there.
 
 Example: API_KEY=your_api_key_here
+
+## openai API update
+
+To have a working chatGPT responses:
+
+1. Clone repo
+2. Add to .env file an openai API key
+3. Change a System Message to your custom response (will work on more user friendlysolution)
+4. Run build
 
 ## Usage
 
